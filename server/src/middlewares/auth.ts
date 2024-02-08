@@ -1,12 +1,16 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { UnauthorizedError } from "../utils/errors";
-import { verify } from "jsonwebtoken";
+import { InternalServerError, UnauthorizedError } from "../utils/errors";
+import { JwtPayload, verify } from "jsonwebtoken";
 
 export type AuthenticatedRequest = {
-  user?: {
-    id: number;
-  };
-} & Request;
+  payload: AuthenticatedRequestPayload,
+} & Request
+
+interface AuthenticatedRequestPayload extends JwtPayload {
+  userId: string;
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export default async function auth(
   req: AuthenticatedRequest,
@@ -14,10 +18,21 @@ export default async function auth(
   next: NextFunction
 ) {
   try {
-    const token = req.headers.accesstoken as string;
-    if (!token) throw new UnauthorizedError("Unauthorized");
-    const decodedToken = verify(token, process.env.JWT_SECRET!) as string;
-    req.user = { id: parseInt(decodedToken) };
+    if (!JWT_SECRET) {
+      throw new InternalServerError('Authentication not setup');
+    }
+
+    const authHeader = req.headers["authorization"];
+    if (!authHeader)
+      throw new UnauthorizedError("authentication token not provided");
+
+    const token = authHeader.split(" ")[1];
+    if (!token)
+      throw new UnauthorizedError("invalid authentication token");
+
+    const decoded = verify(token, JWT_SECRET);
+
+    req.payload.userId = decoded as string;
     next();
   } catch (error) {
     next(error);
