@@ -1,4 +1,6 @@
 import * as winston from "winston";
+import { config } from "dotenv";
+config();
 
 const NODE_ENV = process.env.NODE_ENV ?? "PROD";
 
@@ -25,6 +27,7 @@ const logger = winston.createLogger({
   transports: transports,
 });
 
+  console.log('dev logger', process.env.NODE_ENV)
 if (NODE_ENV === "DEV") {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
