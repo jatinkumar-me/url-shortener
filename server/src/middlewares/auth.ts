@@ -1,6 +1,6 @@
 import { NextFunction, type Request, Response } from "express";
 import { InternalServerError, UnauthorizedError } from "../utils/errors";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { verify } from "jsonwebtoken";
 import { AsyncLocalStorage } from "async_hooks";
 
 interface AuthPayload {
