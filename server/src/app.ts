@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import cors from "cors";
 
 // import logger from "./utils/logger";
+import { userRouter } from "./routes/user";
 import { urlRouter } from "./routes/url-shorten";
 
 /**
@@ -76,6 +77,7 @@ app.use(Express.json());
 /**
  * Setting up routes
  */
+app.use("/user", userRouter)
 app.use("/url", auth, urlRouter)
 
 export default app;
