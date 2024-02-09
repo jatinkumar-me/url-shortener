@@ -1,6 +1,6 @@
-import { Schema, model, Types } from "mongoose";
+import { Schema, model, Types, Document } from "mongoose";
 
-export interface IURLs {
+export interface IURL extends Document{
   userId: Types.ObjectId;
   url: string;
   description?: string;
@@ -8,7 +8,7 @@ export interface IURLs {
   hitCount: number;
 }
 
-const urlSchema = new Schema<IURLs>(
+const urlSchema = new Schema<IURL>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -41,6 +41,6 @@ const urlSchema = new Schema<IURLs>(
   }
 );
 
-const URLModel = model<IURLs>("URL", urlSchema);
+const URLModel = model<IURL>("URL", urlSchema);
 
 export default URLModel;
