@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import cors from "cors";
 
 // import logger from "./utils/logger";
+import { urlRouter } from "./routes/url-shorten";
 
 /**
  * Setting up environment variables
@@ -72,5 +73,9 @@ app.use(Express.json());
 //     }
 //   }
 // );
+/**
+ * Setting up routes
+ */
+app.use("/url", auth, urlRouter)
 
 export default app;
